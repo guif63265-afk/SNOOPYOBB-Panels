@@ -1811,7 +1811,7 @@ function initFirebase(){
   setConnStatus("", "Connecting…");
   onValue(ref(db, USERS_NODE),
     snap => { firebaseReady = true; setConnStatus("ok","Conectado"); allKeys = snap.val() || {}; renderAll(); if(devicesKey) renderDevicesModal(); },
-    err => { console.error("armazenamento de chaves SNOOPY OBB read error:", err); setConnStatus("err","Read error"); toast("ERRO DO FIREBASE","Não foi possível ler o armazenamento de chaves SNOOPY OBB","error",6000); }
+    err => { console.error("armazenamento de chaves SNOOPY OBB read error:", err); setConnStatus("err","Erro de leitura"); toast("ERRO DO FIREBASE","Não foi possível ler o armazenamento de chaves SNOOPY OBB","error",6000); }
   );
   onValue(query(ref(db, ACTIVITY_NODE), limitToLast(MAX_ACTIVITY)),
     snap => { const val = snap.val() || {}; activityLog = Object.entries(val).map(([id,v])=>({id,...v})).sort((a,b)=>(b.time||"").localeCompare(a.time||"")); renderActivity(); renderRecentActivity(); },
@@ -2768,7 +2768,7 @@ $("#downloadSave").addEventListener("click", async () => {
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>PUBLISHING…';
   try {
     await update(ref(db, DOWNLOAD_NODE), { mediafire_url: url, version: version || "1.0", message: message || "Servidor ativo", force_update: forceUpdate, updated_at: Date.now() });
-    logActivity("SNOOPY OBB published", "SNOOPY OBB");
+    logActivity("SNOOPY OBB publicado", "SNOOPY OBB");
     toast("PUBLISHED", "App will fetch on next launch", "success");
     const s = $("#downloadSuccess"); s.textContent = "✓ Published"; s.classList.add("show");
     setTimeout(() => s.classList.remove("show"), 2600);

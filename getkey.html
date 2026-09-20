@@ -1924,7 +1924,7 @@ async function onShare(){
   const key = ($("keyText").textContent || "").trim();
   if(!key || key.includes("—")){ showToast("No key to share", "warn"); return; }
   Sound.click();
-  const sd = { title: "SNOOPY OBB Key", text: `SNOOPY OBB key: ${key}`, url: window.location.href };
+  const sd = { title: "Chave SNOOPY OBB", text: `Chave SNOOPY OBB: ${key}`, url: window.location.href };
   try {
     if(navigator.share) await navigator.share(sd);
     else {
