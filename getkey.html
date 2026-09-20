@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0a0a0f" />
-<title>FIXAMODS · Key Access</title>
+<title>SNOOPY OBB · Key Access</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1121,7 +1121,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <div class="nav">
   <div class="nav-left">
     <div class="logo-mark">F</div>
-    <div class="brand">FIXA<em>MODS</em></div>
+    <div class="brand">SNOOPY OBB</div>
   </div>
   <div class="nav-right">
     <div class="status-pill" id="statusPill">
@@ -1779,7 +1779,7 @@ async function init(){
     db = getDatabase(app);
     appReady = true;
   } catch(err){
-    console.error("[FIXAMODS]", err);
+    console.error("[SNOOPY OBB]", err);
     setStatus("Offline", "red");
     setCtaError();
     return;
@@ -1831,7 +1831,7 @@ async function onGenerate(e){
 
     const newKey = await generateUniqueKey();
     const suffix = newKey.split("-").pop();
-    const username = "FIXA_USER_" + suffix;
+    const username = "SNOOPY_USER_" + suffix;
     const isLucky = Math.random() < LUCKY_CHANCE;
     const durationHours = isLucky ? LUCKY_HOURS : KEY_DURATION_HOURS;
 
@@ -1885,7 +1885,7 @@ async function onGenerate(e){
     }, 7000);
 
   } catch(err){
-    console.error("[FIXAMODS]", err);
+    console.error("[SNOOPY OBB]", err);
     setStatus("Error", "red");
     setEyebrow("Something went wrong");
     Sound.error();
@@ -1924,7 +1924,7 @@ async function onShare(){
   const key = ($("keyText").textContent || "").trim();
   if(!key || key.includes("—")){ showToast("No key to share", "warn"); return; }
   Sound.click();
-  const sd = { title: "FIXAMODS Key", text: `FIXAMODS key: ${key}`, url: window.location.href };
+  const sd = { title: "SNOOPY OBB Key", text: `SNOOPY OBB key: ${key}`, url: window.location.href };
   try {
     if(navigator.share) await navigator.share(sd);
     else {

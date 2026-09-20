@@ -1,6 +1,6 @@
-# FIXAMODS Panels
+# SNOOPY OBB Panels
 
-Static GitHub Pages site containing the FIXAMODS key generator and admin panel.
+Static GitHub Pages site containing the SNOOPY OBB key generator and admin panel.
 
 - `/getkey.html` — key generator
 - `/adminpanel.html` — administrator panel

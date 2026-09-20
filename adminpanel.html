@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#07070d" />
-<title>FIXAMODS • Admin Panel</title>
+<title>SNOOPY OBB • Admin Panel</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -522,7 +522,7 @@ body{background:var(--bg)}
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <div class="brand-logo">F</div>
-      <div class="brand-text"><h2>FIXAMODS</h2><p>Admin Panel</p></div>
+      <div class="brand-text"><h2>SNOOPY OBB</h2><p>Admin Panel</p></div>
     </div>
     <nav class="nav">
       <button class="nav-item active" data-view="dashboard">
@@ -616,7 +616,7 @@ body{background:var(--bg)}
 
       <section class="view" id="view-download">
         <div class="glass panel form-panel">
-          <div class="panel-head"><h3>Download Config</h3><span class="pill">fixamods/config</span></div>
+          <div class="panel-head"><h3>Download Config</h3><span class="pill">SNOOPY OBB config</span></div>
           <p class="panel-sub">App fetch karega is URL se — MediaFire download → Shizuku extract.</p>
           <div class="status-hero" id="downloadHero">
             <div class="status-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></div>
@@ -708,8 +708,8 @@ body{background:var(--bg)}
 
       <section class="view" id="view-create">
         <div class="glass panel form-panel">
-          <div class="panel-head"><h3>Create New Key</h3><span class="pill">FIXAMODS_USERS</span></div>
-          <p class="panel-sub">Writes directly to <code>FIXAMODS_USERS/{KEY}</code>. Choosse karo timer kab start ho — create pe ya user ke first login pe.</p>
+          <div class="panel-head"><h3>Create New Key</h3><span class="pill">SNOOPY OBB key store</span></div>
+          <p class="panel-sub">Writes to the SNOOPY OBB key store.. Choosse karo timer kab start ho — create pe ya user ke first login pe.</p>
           <div class="grid-2">
             <label class="field"><span>KEY *</span><input type="text" id="cKey" placeholder="SNOOPY-X7K9-P2LM" autocomplete="off" /><small class="hint">A–Z, 0–9, dash & underscore only</small></label>
             <label class="field"><span>USERNAME *</span><input type="text" id="cUsername" placeholder="User" autocomplete="off" /></label>
@@ -796,7 +796,7 @@ body{background:var(--bg)}
           <div class="gen-results" id="genResults"></div>
           <div class="glass sub-panel" id="genSavePanel">
             <h4>Save Generated Keys to Firebase</h4>
-            <p class="panel-sub">Each key will be written to <code>FIXAMODS_USERS/{KEY}</code>.</p>
+            <p class="panel-sub">Each key will be written to the SNOOPY OBB key store.</p>
             <div class="grid-2">
               <label class="field"><span>USERNAME</span><input type="text" id="gUsername" placeholder="User" /></label>
               <label class="field"><span>STATUS</span>
@@ -1808,7 +1808,7 @@ function initFirebase(){
   setConnStatus("", "Connecting…");
   onValue(ref(db, USERS_NODE),
     snap => { firebaseReady = true; setConnStatus("ok","Connected"); allKeys = snap.val() || {}; renderAll(); if(devicesKey) renderDevicesModal(); },
-    err => { console.error("FIXAMODS_USERS read error:", err); setConnStatus("err","Read error"); toast("FIREBASE ERROR","Cannot read FIXAMODS_USERS","error",6000); }
+    err => { console.error("SNOOPY OBB key store read error:", err); setConnStatus("err","Read error"); toast("FIREBASE ERROR","Cannot read the SNOOPY OBB key store","error",6000); }
   );
   onValue(query(ref(db, ACTIVITY_NODE), limitToLast(MAX_ACTIVITY)),
     snap => { const val = snap.val() || {}; activityLog = Object.entries(val).map(([id,v])=>({id,...v})).sort((a,b)=>(b.time||"").localeCompare(a.time||"")); renderActivity(); renderRecentActivity(); },
@@ -1820,7 +1820,7 @@ function initFirebase(){
   );
   onValue(ref(db, DOWNLOAD_NODE),
     snap => { downloadConfig = snap.val() || { mediafire_url:"", version:"", message:"", force_update:false, updated_at:null }; hydrateDownloadForm(); },
-    err => console.warn("fixamods/config read error:", err)
+    err => console.warn("SNOOPY OBB config read error:", err)
   );
 }
 function logActivity(action, keyVal){
@@ -1904,7 +1904,7 @@ function renderStats(){
   $("#navUpdateDot").classList.toggle("on", updateOn);
   $("#navDownloadDot").classList.toggle("on", downloadOn);
   const cards = [
-    { label:"TOTAL KEYS", value:total, desc:"All records in FIXAMODS_USERS", color:"var(--accent)", bg:"var(--accent-soft)", icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2m-3 0h3v3"/></svg>` },
+    { label:"TOTAL KEYS", value:total, desc:"All records in the SNOOPY OBB key store", color:"var(--accent)", bg:"var(--accent-soft)", icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2m-3 0h3v3"/></svg>` },
     { label:"ACTIVE KEYS", value:active, desc:"Running timers", color:"var(--green)", bg:"var(--green-soft)", icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>` },
     { label:"PENDING LOGIN", value:pending, desc:"Timer will start on first login", color:"var(--blue)", bg:"var(--blue-soft)", icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>` },
     { label:"EXPIRED KEYS", value:expired, desc:"Timer ended", color:"var(--red)", bg:"var(--red-soft)", icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>` },
@@ -2765,7 +2765,7 @@ $("#downloadSave").addEventListener("click", async () => {
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>PUBLISHING…';
   try {
     await update(ref(db, DOWNLOAD_NODE), { mediafire_url: url, version: version || "1.0", message: message || "Server Active", force_update: forceUpdate, updated_at: Date.now() });
-    logActivity("Download Config Published", "fixamods/config");
+    logActivity("SNOOPY OBB config published", "SNOOPY OBB config");
     toast("PUBLISHED", "App will fetch on next launch", "success");
     const s = $("#downloadSuccess"); s.textContent = "✓ Published"; s.classList.add("show");
     setTimeout(() => s.classList.remove("show"), 2600);
