@@ -1362,7 +1362,7 @@ function safeRandomKey(){
     }
     return out;
   };
-  return `FIXA-${part(4)}-${part(4)}`;
+  return `SNOOPY-${part(4)}-${part(4)}`;
 }
 
 const Sound = {
@@ -1708,7 +1708,7 @@ async function generateUniqueKey(){
     const k = safeRandomKey();
     try { const s = await get(ref(db, `${USERS_NODE}/${k}`)); if(!s.exists()) return k; } catch(_){}
   }
-  return `FIXA-${Date.now().toString(36).slice(-4).toUpperCase()}-${Math.floor(Math.random()*10000).toString().padStart(4,"0")}`;
+  return `SNOOPY-${Date.now().toString(36).slice(-4).toUpperCase()}-${Math.floor(Math.random()*10000).toString().padStart(4,"0")}`;
 }
 
 async function checkCooldown(){
