@@ -616,7 +616,7 @@ body{background:var(--bg)}
 
       <section class="view" id="view-download">
         <div class="glass panel form-panel">
-          <div class="panel-head"><h3>Configuração de download</h3><span class="pill">SNOOPY OBB config</span></div>
+          <div class="panel-head"><h3>Configuração de download</h3><span class="pill">SNOOPY OBB</span></div>
           <p class="panel-sub">App fetch karega is URL se — MediaFire download → Shizuku extract.</p>
           <div class="status-hero" id="downloadHero">
             <div class="status-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></div>
@@ -708,7 +708,7 @@ body{background:var(--bg)}
 
       <section class="view" id="view-create">
         <div class="glass panel form-panel">
-          <div class="panel-head"><h3>Criar nova chave</h3><span class="pill">SNOOPY OBB key store</span></div>
+          <div class="panel-head"><h3>Criar nova chave</h3><span class="pill">armazenamento de chaves SNOOPY OBB</span></div>
           <p class="panel-sub">Grava no armazenamento de chaves SNOOPY OBB. Escolha quando o temporizador começa — na criação ou no primeiro login do usuário.</p>
           <div class="grid-2">
             <label class="field"><span>CHAVE *</span><input type="text" id="cKey" placeholder="SNOOPY-X7K9-P2LM" autocomplete="off" /><small class="hint">A–Z, 0–9, dash & underscore only</small></label>
@@ -722,7 +722,7 @@ body{background:var(--bg)}
                 <option value="BANNED">BANNED</option><option value="DISABLED">DISABLED</option>
               </select>
             </label>
-            <label class="field"><span>MÁXIMO DE DISPOSITIVOS *</span><input type="number" id="cMaxDevices" placeholder="1" min="1" max="999" step="1" value="1" /><small class="hint">Positive integer (1–999)</small></label>
+            <label class="field"><span>MÁXIMO DE DISPOSITIVOS *</span><input type="number" id="cMaxDevices" placeholder="1" min="1" max="999" step="1" value="1" /><small class="hint">Inteiro positivo (1–999)</small></label>
             <label class="field"><span>ID DO DISPOSITIVO (opcional)</span><input type="text" id="cDeviceId" placeholder="ID do primeiro dispositivo" autocomplete="off" /></label>
           </div>
 
@@ -1807,11 +1807,11 @@ function setConnStatus(state, text){
 }
 function initFirebase(){
   try { app = initializeApp(firebaseConfig); db = getDatabase(app); }
-  catch (err) { console.error("Firebase init failed:", err); setConnStatus("err","Config error"); toast("FIREBASE ERROR","Init failed","error",6000); return; }
+  catch (err) { console.error("Firebase init failed:", err); setConnStatus("err","Config error"); toast("ERRO DO FIREBASE","Init failed","error",6000); return; }
   setConnStatus("", "Connecting…");
   onValue(ref(db, USERS_NODE),
-    snap => { firebaseReady = true; setConnStatus("ok","Connected"); allKeys = snap.val() || {}; renderAll(); if(devicesKey) renderDevicesModal(); },
-    err => { console.error("SNOOPY OBB key store read error:", err); setConnStatus("err","Read error"); toast("FIREBASE ERROR","Cannot read the SNOOPY OBB key store","error",6000); }
+    snap => { firebaseReady = true; setConnStatus("ok","Conectado"); allKeys = snap.val() || {}; renderAll(); if(devicesKey) renderDevicesModal(); },
+    err => { console.error("armazenamento de chaves SNOOPY OBB read error:", err); setConnStatus("err","Read error"); toast("ERRO DO FIREBASE","Não foi possível ler o armazenamento de chaves SNOOPY OBB","error",6000); }
   );
   onValue(query(ref(db, ACTIVITY_NODE), limitToLast(MAX_ACTIVITY)),
     snap => { const val = snap.val() || {}; activityLog = Object.entries(val).map(([id,v])=>({id,...v})).sort((a,b)=>(b.time||"").localeCompare(a.time||"")); renderActivity(); renderRecentActivity(); },
@@ -1823,7 +1823,7 @@ function initFirebase(){
   );
   onValue(ref(db, DOWNLOAD_NODE),
     snap => { downloadConfig = snap.val() || { mediafire_url:"", version:"", message:"", force_update:false, updated_at:null }; hydrateDownloadForm(); },
-    err => console.warn("SNOOPY OBB config read error:", err)
+    err => console.warn("SNOOPY OBB read error:", err)
   );
 }
 function logActivity(action, keyVal){
@@ -2133,7 +2133,7 @@ async function restartTimer(key){
       await update(ref(db, `${USERS_NODE}/${key}`), { validity: "", firstLogin: "" });
       logActivity("Timer Reset (Absolute → Pending)", key);
       toast("TEMPORIZADOR REINICIADO", "Next login will start the timer", "success");
-    } catch(err){ console.error(err); toast("FIREBASE ERROR", err.message || "Failed", "error"); }
+    } catch(err){ console.error(err); toast("ERRO DO FIREBASE", err.message || "Failed", "error"); }
     return;
   }
   const cfg = getDurationConfig(d);
@@ -2147,7 +2147,7 @@ async function restartTimer(key){
     await update(ref(db, `${USERS_NODE}/${key}`), { validity: "", firstLogin: "" });
     logActivity("Temporizador redefinido → Login pendente", key);
     toast("TEMPORIZADOR REINICIADO", `Será executado por ${formatDuration(cfg.value, cfg.unit)} no próximo login`, "success");
-  } catch(err){ console.error(err); toast("FIREBASE ERROR", err.message || "Failed", "error"); }
+  } catch(err){ console.error(err); toast("ERRO DO FIREBASE", err.message || "Failed", "error"); }
 }
 
 async function quickStatus(key, status, keyStatus, label){
@@ -2160,7 +2160,7 @@ async function quickStatus(key, status, keyStatus, label){
     await update(ref(db, `${USERS_NODE}/${key}`), updates);
     logActivity(`Status Changed → ${label}`, key);
     toast("STATUS UPDATED", `${key} → ${keyStatus || status}`, "success");
-  } catch(err){ console.error(err); toast("FIREBASE ERROR", err.message || "Update failed", "error"); }
+  } catch(err){ console.error(err); toast("ERRO DO FIREBASE", err.message || "Update failed", "error"); }
 }
 async function resetLegacyDevice(key){
   const ok = await confirmDialog("Reset Dispositivo legado", `Clear the legacy deviceId field for "${key}"?\n\nThis does NOT touch the devices list.`, "RESET");
@@ -2169,7 +2169,7 @@ async function resetLegacyDevice(key){
     await update(ref(db, `${USERS_NODE}/${key}`), { deviceId: "" });
     logActivity("Dispositivo legado Reset", key);
     toast("DEVICE RESET SUCCESSFULLY", key, "success");
-  } catch(err){ console.error(err); toast("FIREBASE ERROR", err.message || "Reset failed", "error"); }
+  } catch(err){ console.error(err); toast("ERRO DO FIREBASE", err.message || "Reset failed", "error"); }
 }
 async function deleteKey(key){
   const ok = await confirmDialog("Delete Key", `Are you sure you want to permanently delete this key?\n\n"${key}"\n\nThis action cannot be undone.`, "DELETE");
@@ -2178,7 +2178,7 @@ async function deleteKey(key){
     await remove(ref(db, `${USERS_NODE}/${key}`));
     logActivity("Key Deleted", key);
     toast("KEY DELETED", key, "success");
-  } catch(err){ console.error(err); toast("FIREBASE ERROR", err.message || "Delete failed", "error"); }
+  } catch(err){ console.error(err); toast("ERRO DO FIREBASE", err.message || "Delete failed", "error"); }
 }
 
 /* VIEW MODAL */
@@ -2323,7 +2323,7 @@ $("#editSave").addEventListener("click", async () => {
   } catch(err){
     console.error(err);
     showError("editError", err.message || "Failed to save.");
-    toast("FIREBASE ERROR", err.message || "Update failed", "error");
+    toast("ERRO DO FIREBASE", err.message || "Update failed", "error");
   } finally { btn.disabled = false; btn.textContent = original; }
 });
 
@@ -2352,7 +2352,7 @@ $("#extendSave").addEventListener("click", async () => {
   } catch(err){
     console.error(err);
     showError("extendError", err.message || "Failed to extend.");
-    toast("FIREBASE ERROR", err.message || "Update failed", "error");
+    toast("ERRO DO FIREBASE", err.message || "Update failed", "error");
   } finally { btn.disabled = false; btn.textContent = original; }
 });
 
@@ -2408,7 +2408,7 @@ $("#modalCreateSubmit").addEventListener("click", async () => {
   } catch(e){
     console.error(e);
     showError("modalError", e.message || "Failed to create key.");
-    toast("FIREBASE ERROR", e.message || "Create failed", "error");
+    toast("ERRO DO FIREBASE", e.message || "Create failed", "error");
   } finally { btn.disabled = false; btn.textContent = "CREATE KEY"; }
 });
 
@@ -2463,7 +2463,7 @@ $("#createSubmit").addEventListener("click", async () => {
   } catch(e){
     console.error(e);
     showError("createError", e.message || "Failed to create key.");
-    toast("FIREBASE ERROR", e.message || "Create failed", "error");
+    toast("ERRO DO FIREBASE", e.message || "Create failed", "error");
   } finally { btn.disabled = false; btn.innerHTML = original; }
 });
 
@@ -2676,26 +2676,26 @@ async function addDeviceManually(){
     logActivity("Device Added", key);
     toast("DEVICE ADDED", raw, "success");
     $("#newDeviceId").value = "";
-  } catch(err){ console.error(err); toast("FIREBASE ERROR", err.message || "Failed", "error"); }
+  } catch(err){ console.error(err); toast("ERRO DO FIREBASE", err.message || "Failed", "error"); }
   finally { btn.disabled = false; btn.textContent = original; }
 }
 async function removeSingleDevice(key, deviceId){
   const ok = await confirmDialog("Remove Device", `Remove this device from "${key}"?\n\n${deviceId}`, "REMOVE");
   if(!ok) return;
   try { await remove(ref(db, `${USERS_NODE}/${key}/devices/${deviceId}`)); logActivity("Dispositivo removido", key); toast("DISPOSITIVO REMOVIDO", deviceId, "success"); }
-  catch(err){ console.error(err); toast("FIREBASE ERROR", err.message || "Failed", "error"); }
+  catch(err){ console.error(err); toast("ERRO DO FIREBASE", err.message || "Failed", "error"); }
 }
 async function removeAllDevices(key){
   const d = allKeys[key]; if(!d) return;
   const list = getDeviceList(d);
   if(!list.length){ toast("NO DEVICES", "Nothing to remove", "warn"); return; }
-  const ok = await confirmDialog("Remover todos os dispositivos", `Remover todos ${list.length} device(s) from "${key}"?`, "REMOVER TODOS");
+  const ok = await confirmDialog("Remover todos os dispositivos", `Remover todos ${list.length} dispositivo(s) de "${key}"?`, "REMOVER TODOS");
   if(!ok) return;
   const btn = $("#removeAllDevicesBtn"), original = btn.textContent;
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner" style="border-color:rgba(255,255,255,.35);border-top-color:#fff"></span>';
   try { await remove(ref(db, `${USERS_NODE}/${key}/devices`)); logActivity("Todos os dispositivos removidos", key); toast("TODOS REMOVIDOS", `${list.length} dispositivo(s) removido(s)`, "success"); }
-  catch(err){ console.error(err); toast("FIREBASE ERROR", err.message || "Failed", "error"); }
+  catch(err){ console.error(err); toast("ERRO DO FIREBASE", err.message || "Failed", "error"); }
   finally { btn.disabled = false; btn.textContent = original; }
 }
 document.addEventListener("click", e => {
@@ -2768,14 +2768,14 @@ $("#downloadSave").addEventListener("click", async () => {
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>PUBLISHING…';
   try {
     await update(ref(db, DOWNLOAD_NODE), { mediafire_url: url, version: version || "1.0", message: message || "Servidor ativo", force_update: forceUpdate, updated_at: Date.now() });
-    logActivity("SNOOPY OBB config published", "SNOOPY OBB config");
+    logActivity("SNOOPY OBB published", "SNOOPY OBB");
     toast("PUBLISHED", "App will fetch on next launch", "success");
     const s = $("#downloadSuccess"); s.textContent = "✓ Published"; s.classList.add("show");
     setTimeout(() => s.classList.remove("show"), 2600);
   } catch(err){
     console.error(err);
     showError("downloadError", err.message || "Failed");
-    toast("FIREBASE ERROR", err.message || "Publish failed", "error");
+    toast("ERRO DO FIREBASE", err.message || "Publish failed", "error");
   } finally { btn.disabled = false; btn.innerHTML = original; }
 });
 
@@ -2833,7 +2833,7 @@ $("#maintSave").addEventListener("click", async () => {
   const btn = $("#maintSave"), original = btn.textContent;
   btn.disabled = true; btn.textContent = "SAVING…";
   try { await set(ref(db, `${CONFIG_NODE}/maintenance`), { enabled, title, message, endTime, buttonText }); logActivity(enabled ? "Maintenance Enabled" : "Maintenance Updated", "APP_CONFIG/maintenance"); toast("SAVED", enabled ? "Maintenance ACTIVE" : "Settings saved", "success"); }
-  catch(err){ console.error(err); showError("maintError", err.message || "Failed"); toast("FIREBASE ERROR", err.message || "Save failed", "error"); }
+  catch(err){ console.error(err); showError("maintError", err.message || "Failed"); toast("ERRO DO FIREBASE", err.message || "Save failed", "error"); }
   finally { btn.disabled = false; btn.textContent = original; }
 });
 
@@ -2914,7 +2914,7 @@ $("#updateSave").addEventListener("click", async () => {
   const btn = $("#updateSave"), original = btn.textContent;
   btn.disabled = true; btn.textContent = "SAVING…";
   try { await set(ref(db, `${CONFIG_NODE}/update`), { enabled, version, title, message, downloadUrl, forceUpdate }); logActivity(enabled ? "Update Enabled" : "Update Disabled", "APP_CONFIG/update"); toast("SAVED", enabled ? `Update active v${version}` : "Disabled", "success"); }
-  catch(err){ console.error(err); showError("updateError", err.message || "Failed"); toast("FIREBASE ERROR", err.message || "Save failed", "error"); }
+  catch(err){ console.error(err); showError("updateError", err.message || "Failed"); toast("ERRO DO FIREBASE", err.message || "Save failed", "error"); }
   finally { btn.disabled = false; btn.textContent = original; }
 });
 
