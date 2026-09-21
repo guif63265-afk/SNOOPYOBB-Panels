@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0a0a0f" />
-<title>SNÃOOPY OBB · Acesso por chave</title>
+<title>SNOOPY OBB · Acesso por chave</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1107,6 +1107,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     transition-duration:.01ms !important;
   }
 }
+
+/* SNOOPY OBB branding extracted from the official APK */
+body{background:linear-gradient(135deg,rgba(2,8,20,.88),rgba(2,20,48,.72)),url('./snoopy-background.png') center/cover fixed no-repeat}
+.logo-mark.logo-image{width:46px;height:46px;border-radius:12px;background:rgba(2,12,30,.78);padding:2px;overflow:hidden;box-shadow:0 8px 26px rgba(0,202,255,.3),inset 0 1px 0 rgba(255,255,255,.3);animation:none}
+.logo-mark.logo-image::before{display:none}
+.logo-mark.logo-image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.nav{background:rgba(2,10,26,.58);border-bottom-color:rgba(34,211,238,.14)}
+.brand{letter-spacing:.08em;text-transform:uppercase}
+
 </style>
 </head>
 <body>
@@ -1120,8 +1129,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <!-- NAV -->
 <div class="nav">
   <div class="nav-left">
-    <div class="logo-mark">F</div>
-    <div class="brand">SNÃOOPY OBB</div>
+    <div class="logo-mark logo-image"><img src="./snoopy-logo.png" alt="Snoopy OBB" /></div>
+    <div class="brand">SNOOPY <em>OBB</em></div>
   </div>
   <div class="nav-right">
     <div class="status-pill" id="statusPill">
