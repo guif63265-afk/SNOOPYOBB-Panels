@@ -1172,7 +1172,7 @@ body{background:radial-gradient(circle at 18% 12%,rgba(220,38,38,.22),transparen
       </h1>
       <p class="subtitle">
         Gere uma chave única em um toque.
-        <strong>12 horas de acesso completo</strong>, limitado a um único dispositivo.
+        <strong>24 horas de acesso completo</strong>, limitado a um único dispositivo.
         Usuários sortudos liberam uma chave especial de 24 horas.
       </p>
     </div>
@@ -1203,7 +1203,7 @@ body{background:radial-gradient(circle at 18% 12%,rgba(220,38,38,.22),transparen
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5.6L20 9.2l-4.2 4 1.1 6-4.9-2.8L7.1 19l1.1-6-4.2-4 5.6-1.6z"/></svg>
             </div>
             <div class="feature-value" data-count="15" data-suffix="%">0</div>
-            <div class="feature-label">Bônus de sorte</div>
+            <div class="feature-label">Acesso de 24 horas</div>
           </div>
         </div>
 
@@ -1236,12 +1236,12 @@ body{background:radial-gradient(circle at 18% 12%,rgba(220,38,38,.22),transparen
           <div class="key-text" id="keyText">— — — —  — — — —</div>
           <div class="bonus-pill hidden" id="bonusPill">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5.6L20 9.2l-4.2 4 1.1 6-4.9-2.8L7.1 19l1.1-6-4.2-4 5.6-1.6z"/></svg>
-            Bônus de sorte · 24 Hours
+            Acesso de 24 horas · 24 Hours
           </div>
           <div class="key-metas">
             <div class="meta">
               <span class="meta-l">Duração</span>
-              <span class="meta-v" id="metaDuration">12 horas</span>
+              <span class="meta-v" id="metaDuration">24 horas</span>
             </div>
             <div class="meta">
               <span class="meta-l">Início</span>
@@ -1329,8 +1329,8 @@ const firebaseConfig = {
 const USERS_NODE = "FIXAMODS_USERS";
 const KEYGEN_NODE = "FIXAMODS_KEYGEN";
 const COOLDOWN_MS = 12 * 60 * 60 * 1000;
-const KEY_DURATION_HOURS = 12;
-const LUCKY_CHANCE = 0.15;
+const KEY_DURATION_HOURS = 24;
+const LUCKY_CHANCE = 0;
 const LUCKY_HOURS = 24;
 
 let app = null, db = null;
@@ -1633,7 +1633,7 @@ function showResult(key, isGold){
     $("resultLabelText").textContent = "Chave gerada";
     $("keyDisplay").classList.remove("gold");
     $("bonusPill").classList.add("hidden");
-    $("metaDuration").textContent = "12 horas";
+    $("metaDuration").textContent = "24 horas";
   }
 
   revealKey($("keyText"), key);
@@ -1884,10 +1884,10 @@ async function onGenerate(e){
     cooldownActive = true;
 
     if(isLucky){
-      setStatus("Sortudo!", "");
-      setEyebrow("Bônus de sorte liberado");
+      setStatus("24 horas", "");
+      setEyebrow("Acesso de 24 horas liberado");
       Sound.lucky();
-      showToast("Bônus de sorte · 24 horas liberado", "gold", 5000);
+      showToast("Acesso de 24 horas · 24 horas liberado", "gold", 5000);
     } else {
       setStatus("Success", "");
       setEyebrow("Sua chave está pronta");
