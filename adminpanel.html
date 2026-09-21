@@ -519,6 +519,18 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;background:linear-grad
 .sidebar-brand{gap:12px;padding:18px 14px 20px}
 .sidebar-brand .brand-text h2{letter-spacing:.16em;text-shadow:0 0 18px rgba(0,202,255,.25)}
 
+
+/* SNOOPY OBB red edition */
+body::before{background:radial-gradient(circle at 15% 10%,rgba(220,38,38,.18),transparent 34%),radial-gradient(circle at 85% 90%,rgba(127,29,29,.22),transparent 38%),#070707}
+.app{background:linear-gradient(135deg,rgba(7,7,7,.95),rgba(18,5,7,.92))}
+.sidebar{background:linear-gradient(180deg,rgba(18,8,10,.98),rgba(7,7,7,.98));border-right-color:rgba(239,68,68,.18)}
+.brand-logo.brand-logo-red{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#ef4444,#991b1b 58%,#450a0a);box-shadow:0 8px 26px rgba(220,38,38,.45),inset 0 1px 0 rgba(255,255,255,.28);font-size:23px;color:#fff;animation:logoPulse 3s ease-in-out infinite}
+.sidebar-brand .brand-text h2{letter-spacing:.16em;text-shadow:0 0 18px rgba(239,68,68,.28)}
+.btn-primary,.seg button.active,.preview-btn{background:linear-gradient(135deg,#dc2626,#991b1b)!important;box-shadow:0 6px 22px rgba(220,38,38,.35)!important}
+.btn-danger{background:linear-gradient(135deg,#7f1d1d,#ef4444)!important}
+.nav-item.active{background:linear-gradient(90deg,rgba(220,38,38,.2),rgba(127,29,29,.06));color:#fca5a5;border-left-color:#ef4444}
+.nav-count,.nav-dot{background:#ef4444;box-shadow:0 0 10px rgba(239,68,68,.7)}
+
 </style>
 </head>
 <body>
@@ -529,7 +541,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;background:linear-grad
 <div class="app" id="app">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-logo brand-logo-image"><img src="./snoopy-logo.png" alt="Snoopy OBB" /></div>
+      <div class="brand-logo brand-logo-red" aria-label="Snoopy OBB">✦</div>
       <div class="brand-text"><h2>SNOOPY OBB</h2><p>Painel administrativo</p></div>
     </div>
     <nav class="nav">
