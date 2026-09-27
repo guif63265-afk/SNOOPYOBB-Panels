@@ -896,6 +896,21 @@ body::before{background:radial-gradient(circle at 15% 10%,rgba(220,38,38,.18),tr
             <div class="toggle-info"><div class="toggle-title">Enable Manutenção Mode</div><div class="toggle-desc">When enabled, the Android app shows the maintenance screen</div></div>
             <label class="switch"><input type="checkbox" id="maintEnabled" /><span class="slider"></span></label>
           </div>
+          <div class="glass sub-panel" style="margin-top:18px">
+            <div class="panel-head"><h4>URL do botão “GERAR CHAVE”</h4><span class="pill">APP_CONFIG/getKeyUrl</span></div>
+            <p class="panel-sub">O APK busca esta URL antes de abrir o gerador. Alterações entram em vigor sem publicar outro APK.</p>
+            <label class="field"><span>URL ATUAL</span><input type="url" id="getKeyUrlInput" placeholder="https://seu-site.example/getkey.html" autocomplete="off" /></label>
+            <div class="status-hero active-blue" id="getKeyUrlHero" style="margin-top:12px">
+              <div class="status-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.1.1l2-2a5 5 0 00-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 00-7.1-.1l-2 2A5 5 0 0012 20l1.1-1.1"/></svg></div>
+              <div class="status-hero-body"><div class="status-hero-label">Configuração remota</div><div class="status-hero-title" id="getKeyUrlHeroTitle">URL não configurada</div><div class="status-hero-desc" id="getKeyUrlHeroDesc">O APK exibirá “Servidor indisponível”.</div></div>
+              <div class="status-hero-pill" id="getKeyUrlHeroPill">EMPTY</div>
+            </div>
+            <div class="form-error" id="getKeyUrlError"></div>
+            <div class="form-actions">
+              <button class="btn btn-ghost" id="getKeyUrlReset">RECARREGAR</button>
+              <button class="btn btn-primary" id="getKeyUrlSave">SALVAR URL</button>
+            </div>
+          </div>
           <div class="grid-2">
             <label class="field span-2"><span>TÍTULO</span><input type="text" id="maintTitle" placeholder="UNDER MAINTENANCE" /></label>
             <label class="field span-2"><span>MENSAGEM</span><textarea id="maintMessage" placeholder="Please try again later."></textarea></label>
@@ -1288,7 +1303,7 @@ const USERS_NODE="FIXAMODS_USERS", ACTIVITY_NODE="ADMIN_ACTIVITY", CONFIG_NODE="
 
 let app=null, db=null, firebaseReady=false;
 let allKeys={}, activityLog=[];
-let appConfig={maintenance:{},update:{}};
+let appConfig={maintenance:{},update:{},getKeyUrl:""};
 let downloadConfig={mediafire_url:"",version:"",message:"",force_update:false,updated_at:null};
 let currentFilter="ALL", currentSearch="", currentSort="newest";
 let currentPage=1, perPage=10;
@@ -1838,7 +1853,7 @@ function initFirebase(){
     err => console.warn("ADMIN_ACTIVITY read error:", err)
   );
   onValue(ref(db, CONFIG_NODE),
-    snap => { const val = snap.val() || {}; appConfig = { maintenance: val.maintenance || {}, update: val.update || {} }; hydrateMaintenanceForm(); hydrateUpdateForm(); },
+    snap => { const val = snap.val() || {}; appConfig = { maintenance: val.maintenance || {}, update: val.update || {}, getKeyUrl: typeof val.getKeyUrl === "string" ? val.getKeyUrl : "" }; hydrateGetKeyUrlForm(); hydrateMaintenanceForm(); hydrateUpdateForm(); },
     err => console.warn("APP_CONFIG read error:", err)
   );
   onValue(ref(db, DOWNLOAD_NODE),
@@ -2799,6 +2814,50 @@ $("#downloadSave").addEventListener("click", async () => {
   } finally { btn.disabled = false; btn.innerHTML = original; }
 });
 
+
+/* DYNAMIC KEY GENERATOR URL */
+function hydrateGetKeyUrlForm(){
+  const url = typeof appConfig.getKeyUrl === "string" ? appConfig.getKeyUrl : "";
+  $("#getKeyUrlInput").value = url;
+  updateGetKeyUrlHero();
+}
+function updateGetKeyUrlHero(){
+  const url = $("#getKeyUrlInput").value.trim();
+  const hero = $("#getKeyUrlHero");
+  hero.classList.remove("active-green","active-red","active-orange","active-blue");
+  if(url){
+    hero.classList.add("active-blue");
+    $("#getKeyUrlHeroTitle").textContent = "URL configurada";
+    $("#getKeyUrlHeroDesc").textContent = url;
+    $("#getKeyUrlHeroPill").textContent = "READY";
+  } else {
+    hero.classList.add("active-orange");
+    $("#getKeyUrlHeroTitle").textContent = "URL não configurada";
+    $("#getKeyUrlHeroDesc").textContent = "O APK exibirá “Servidor indisponível”.";
+    $("#getKeyUrlHeroPill").textContent = "EMPTY";
+  }
+}
+$("#getKeyUrlInput").addEventListener("input", updateGetKeyUrlHero);
+$("#getKeyUrlReset").addEventListener("click", () => { hydrateGetKeyUrlForm(); toast("RECARREGADO", "URL recarregada", "info", 1800); });
+$("#getKeyUrlSave").addEventListener("click", async () => {
+  const url = $("#getKeyUrlInput").value.trim();
+  if(!url){ showError("getKeyUrlError", "Informe uma URL para o gerador."); return; }
+  if(!/^https?:\/\//i.test(url)){ showError("getKeyUrlError", "A URL deve começar com http:// ou https://"); return; }
+  hideError("getKeyUrlError");
+  const ok = await confirmDialog("Salvar URL do gerador", `O APK passará a abrir:
+
+${url}`, "SALVAR");
+  if(!ok) return;
+  const btn = $("#getKeyUrlSave"), original = btn.textContent;
+  btn.disabled = true; btn.textContent = "SALVANDO…";
+  try {
+    await set(ref(db, `${CONFIG_NODE}/getKeyUrl`), url);
+    logActivity("URL do gerador alterada", "APP_CONFIG/getKeyUrl");
+    toast("SALVO", "O APK usará a nova URL", "success");
+  } catch(err){ console.error(err); showError("getKeyUrlError", err.message || "Falha ao salvar"); toast("ERRO DO FIREBASE", err.message || "Save failed", "error"); }
+  finally { btn.disabled = false; btn.textContent = original; }
+});
+
 /* MAINTENANCE */
 function hydrateMaintenanceForm(){
   const m = appConfig.maintenance || {};
@@ -2947,7 +3006,7 @@ function currentView(){ const a = $(".view.active"); return a ? a.id.replace("vi
 $("#sortSelect").addEventListener("change", e => { currentSort = e.target.value; currentPage = 1; renderKeys(); });
 $("#perPageSelect").addEventListener("change", e => { perPage = parseInt(e.target.value, 10) || 10; currentPage = 1; renderKeys(); });
 $$("#filterChips .chip").forEach(chip => chip.addEventListener("click", () => { $$("#filterChips .chip").forEach(c => c.classList.remove("active")); chip.classList.add("active"); currentFilter = chip.dataset.filter; currentPage = 1; renderKeys(); }));
-$("#refreshBtn").addEventListener("click", () => { renderAll(); renderActivity(); hydrateMaintenanceForm(); hydrateUpdateForm(); hydrateDownloadForm(); if(devicesKey) renderDevicesModal(); toast("ATUALIZADO", "Visualização atualizada", "info", 1800); });
+$("#refreshBtn").addEventListener("click", () => { renderAll(); renderActivity(); hydrateGetKeyUrlForm(); hydrateMaintenanceForm(); hydrateUpdateForm(); hydrateDownloadForm(); if(devicesKey) renderDevicesModal(); toast("ATUALIZADO", "Visualização atualizada", "info", 1800); });
 
 /* SETTINGS */
 function applyConfirmSetting(on){ settings.confirmations = on; localStorage.setItem("fm_confirm", on ? "on" : "off"); $$("#confirmSeg button").forEach(b => b.classList.toggle("active", (b.dataset.confirmVal === "on") === on)); }
